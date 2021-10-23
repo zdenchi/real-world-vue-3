@@ -14,7 +14,7 @@ const routes = [
     props: route => ({ page: parseInt(route.query.page) || 1 })
   },
   {
-    path: '/event/:id',
+    path: '/events/:id',
     name: 'EventLayout',
     component: EventLayout,
     props: true,
@@ -37,7 +37,13 @@ const routes = [
     ]
   },
   {
-    path: '/about',
+    path: '/event/:afterEvent(.*)',
+    redirect: to => {
+      return { path: `/events/${to.params.afterEvent}` }
+    }
+  },
+  {
+    path: '/about-us',
     name: 'About',
     component: About
     // route level code-splitting
@@ -45,6 +51,10 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     // component: () =>
     // import(/* webpackChunkName: "about" */ "../views/About.vue")
+  },
+  {
+    path: '/about',
+    redirect: { name: 'About' }
   }
 ];
 
