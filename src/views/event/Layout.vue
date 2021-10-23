@@ -22,8 +22,23 @@ export default {
   props: ['id'],
   created() {
     EventService.getEvent(this.id)
-      .then(response => (this.event = response.data))
-      .catch(err => console.log(err));
+      .then(response => {
+        this.event = response.data;
+      })
+      .catch(err => {
+        console.log(err);
+
+        if (err.response && err.response.status == 404) {
+          // Add redirect to 404 error page with params: { resource: 'event' }
+          this.$router.push({
+            name: '404Resource',
+            params: { resource: 'event' }
+          });
+        } else {
+          // Add redirect to 500 error page
+          this.$router.push({ name: 'NetworkError' });
+        }
+      });
   }
 };
 </script>
