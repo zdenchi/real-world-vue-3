@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <div id="flashMessage" v-if="GStore.flashMessage">{{ GStore.flashMessage }}</div>
+    <div id="flashMessage" v-if="GStore.flashMessage">
+      {{ GStore.flashMessage }}
+    </div>
 
     <div id="nav">
       <router-link :to="{ name: 'EventList' }">Events</router-link> |
@@ -48,6 +50,7 @@ h4 {
   }
   to {
     background: transparent;
+    color: transparent;
   }
 }
 

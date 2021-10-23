@@ -21,5 +21,5 @@ export default {
       this.$router.push({ name: 'EventDetails' });
     }
   }
-}
+};
 </script>

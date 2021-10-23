@@ -25,10 +25,10 @@ export default {
       .then(response => {
         this.event = response.data;
       })
-      .catch(err => {
-        console.log(err);
+      .catch(error => {
+        console.log(error);
 
-        if (err.response && err.response.status == 404) {
+        if (error.response && error.response.status == 404) {
           // Add redirect to 404 error page with params: { resource: 'event' }
           this.$router.push({
             name: '404Resource',

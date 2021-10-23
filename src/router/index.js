@@ -24,7 +24,7 @@ const routes = [
       {
         path: '',
         name: 'EventDetails',
-        component: EventDetails,
+        component: EventDetails
       },
       {
         path: 'edit',
@@ -41,7 +41,7 @@ const routes = [
   {
     path: '/event/:afterEvent(.*)',
     redirect: to => {
-      return { path: `/events/${to.params.afterEvent}` }
+      return { path: `/events/${to.params.afterEvent}` };
     }
   },
   {
@@ -70,7 +70,7 @@ const routes = [
     props: true
   },
   {
-    path: 'network-error',
+    path: '/network-error',
     name: 'NetworkError',
     component: NetworkError
   }
