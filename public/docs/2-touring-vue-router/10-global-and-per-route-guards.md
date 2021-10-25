@@ -1,47 +1,133 @@
-## 9. In-Component Route Guards
+## 10. Global And Per-Route Guards
 
-1. Move API call into an In-Component Route Guard
-2. Install `nprogress`, progress bar library
-3. Start progress bar when routing to the component
-4. Finish the progress bar when API call finishes
-5. Ensure that pagination still works
+`router.beforeEach((to, from) => { ... }`
 
-### In-Component Route Hooks
+`router.beforeResolve((to, from) => { ... }`
 
-`beforeRouteEnter(routeTo, routeFrom, next)`
+`router.afterEach((to, from) => { ... }`
 
-`beforeRouteUpdate(routeTo, routeFrom, next)`
+```js /src/router/index.js
+import NProgress from 'nprogress';
 
-`beforeRouteLeave(routeTo, routeFrom, next)`
+router.beforeEach(() => {
+  NProgress.start();
+});
 
-#### next
+router.afterEach(() => {
+  NProgress.done();
+});
 
-Continue navigation `next() || return `
+export default router;
+```
 
-Cancel the navigation `next(false) || return false`
-
-Redirect to the path `/` `next('/') || return '/'`
-
-Redirect to the named path `next({ name: 'event-list' }) || return { name: 'event-list' }`
-
-#### Confirm the user wants to leave the page
-
-```html
+Remove NProgress from `EventList.vue` and add `return` to `beforeRouteUpdate`.
+```html /src/views/EventList.vue
 <script>
-export default {
-  data() {
-    return {
-      unsavedChanges: false
-    }
-  },
-  beforeRouteLeave(routeTo, routeFrom, next) {
-    if (this.unsavedChanges) {
-      const answer = window.confirm('You have unsaved changes! Do you really want to leave?');
-      if (!answer) {
-        return false;
-      }
-    }
-  }
-};
+beforeRouteEnter(routeTo, routeFrom, next) {
+  EventService.getEvents(2, parseInt(routeTo.query.page) || 1)
+    .then(response => {
+      next(comp => {
+        comp.events = response.data
+        comp.totalEvents = response.headers['x-total-count']
+      })
+    })
+    .catch(() => {
+      next({ name: 'NetworkError' })
+    })
+},
+beforeRouteUpdate(routeTo) {
+  return EventService.getEvents(
+    parseInt(routeTo.query.limit) || 2,
+    parseInt(routeTo.query.page) || 1
+  )
+    .then(response => {
+      this.events = response.data;
+      this.totalEvents = response.headers['x-total-count'];
+    })
+    .catch(err => {
+      console.log(err);
+      return { name: 'NetworkError' };
+    });
+},
 </script>
 ```
+
+Move API call event from `Layout.vue` to router.
+```js /src/router/index.js
+import EventService from '@/services/EventService.js';
+import GStore from '@/store';
+
+const routes = [
+  {
+    path: '/events/:id',
+    name: 'EventLayout',
+    props: true,
+    component: EventLayout,
+    beforeEnter: to => {
+      return EventService.getEvent(to.params.id)
+        .then(response => {
+          GStore.event = response.data;
+        })
+        .catch(error => {
+          console.log(error);
+          if (error.response && error.response.status == 404) {
+            // Add red rect to 404 error page with params: { resource: 'event' }
+            return {
+              name: '404Resource',
+              params: { resource: 'event' }
+            };
+          } else {
+            // Add redirect to 500 error page
+            return { name: 'NetworkError' };
+          }
+        });
+    }
+    children: [ ... ]
+  }
+```
+
+Move Global Store to it's own file, and add a new reactive property `event`.
+```js /src/main.js
+import { createApp } from 'vue';
+import App from './App.vue';
+import router from './router';
+import GStore from './store';
+import 'nprogress/nprogress.css';
+
+createApp(App)
+  .use(router)
+  .provide('GStore', GStore)
+  .mount('#app');
+```
+
+```js /src/store/index.js
+import { reactive } from 'vue';
+
+export default reactive({ flashMessage: '', event: null });
+```
+
+Remove all script, inject `GStore` and add it to all `event`.
+```html /src/views/event/Layout.vue
+<template>
+  <div v-if="GStore.event">
+    <h1>{{ GStore.event.title }}</h1>
+    <div id="nav">
+      <router-link :to="{ name: 'EventDetails' }">Details</router-link>
+      |
+      <router-link :to="{ name: 'EventRegister' }">Register</router-link>
+      |
+      <router-link :to="{ name: 'EventEdit' }">Edit</router-link>
+    </div>
+    <router-view :event="GStore.event" />
+  </div>
+</template>
+
+<script>
+export default {
+  inject: ['GStore']
+}
+</script>
+```
+
+#### Calling Order
+![Calling Order](https://firebasestorage.googleapis.com/v0/b/vue-mastery.appspot.com/o/flamelink%2Fmedia%2F3.1618588875881.jpg?alt=media&token=abd26acf-90f6-4a39-8441-89cedd353ff2)
