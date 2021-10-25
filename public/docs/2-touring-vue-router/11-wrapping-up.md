@@ -26,7 +26,7 @@ Redirect to the named path `next({ name: 'event-list' }) || return { name: 'even
 
 #### Confirm the user wants to leave the page
 
-```html /src/views/event/Edit.vue
+```html
 <script>
 export default {
   data() {
@@ -44,49 +44,4 @@ export default {
   }
 };
 </script>
-```
-
-```html /src/views/EventList.vue
-<script>
-import NProgress from 'nprogress';
-
-beforeRouteEnter(routeTo, routeFrom, next) {
-  NProgress.start();
-  EventService.getEvents(
-    parseInt(routeTo.query.limit) || 2,
-    parseInt(routeTo.query.page) || 1
-  )
-    .then(response => {
-      next(comp => {
-        comp.events = response.data;
-        comp.totalEvents = response.headers['x-total-count'];
-      });
-    })
-    .catch(err => {
-      console.log(err);
-      next({ name: 'NetworkError' });
-    })
-    .finally(() => NProgress.done());
-},
-beforeRouteUpdate(routeTo) {
-  NProgress.start();
-  EventService.getEvents(
-    parseInt(routeTo.query.limit) || 2,
-    parseInt(routeTo.query.page) || 1
-  )
-    .then(response => {
-      this.events = response.data;
-      this.totalEvents = response.headers['x-total-count'];
-    })
-    .catch(err => {
-      console.log(err);
-      return { name: 'NetworkError' };
-    })
-    .finally(() => NProgress.done());
-}
-</script>
-```
-
-```js /src/main.js
-import 'nprogress/nprogress.css';
 ```

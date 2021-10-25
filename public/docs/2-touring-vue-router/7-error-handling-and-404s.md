@@ -26,7 +26,7 @@ const route = [
 ]
 ```
 
-```vue /src/views/NotFound.vue
+```html /src/views/NotFound.vue
 <template>
   <h1>Oops!</h1>
   <h3>The {{ resource }} you're looking for is not here.</h3>
@@ -45,7 +45,7 @@ export default {
 </script>
 ```
 
-```vue /src/views/event/Layout.vue
+```html /src/views/event/Layout.vue
 <script>
 export default {
   // ...
@@ -70,7 +70,7 @@ export default {
 
 #### 500 Internal Server Error
 
-```vue /src/views/NetworkError.vue
+```html /src/views/NetworkError.vue
 <template>
   <div class="networkError">
     <h1>Uh-Oh!</h1>
@@ -91,7 +91,7 @@ const route = [
 ]
 ```
 
-```vue /src/views/event/Layout.vue
+```html /src/views/event/Layout.vue
 <script>
 export default {
   // ...

@@ -16,7 +16,7 @@ createApp(App)
   .mount('#app');
 ```
 
-```vue /src/views/event/Register.vue
+```html /src/views/event/Register.vue
 <script>
 export default {
   props: ['event'],
@@ -39,7 +39,7 @@ export default {
 </script>
 ```
 
-```vue /src/App.vue
+```html /src/App.vue
 <template>
 	<div id="app">
     <div id="flashMessage" v-if="GStore.flashMessage">{{ GStore.flashMessage }}</div>

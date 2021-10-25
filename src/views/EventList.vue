@@ -5,7 +5,7 @@
     <div class="pagination">
       <router-link
         id="page-prev"
-        :to="{ name: 'EventList', query: { page: page - 1 } }"
+        :to="{ name: 'EventList', query: { page: page - 1, limit: limit } }"
         rel="prev"
         v-if="page != 1"
         >&#60; Previous
@@ -15,14 +15,14 @@
         v-for="i in totalPages"
         :key="i"
         :class="{ active: page === i }"
-        :to="{ name: 'EventList', query: { page: i } }"
+        :to="{ name: 'EventList', query: { page: i, limit: limit } }"
         :rel="page"
         >{{ i }}
       </router-link>
 
       <router-link
         id="page-next"
-        :to="{ name: 'EventList', query: { page: page + 1 } }"
+        :to="{ name: 'EventList', query: { page: page + 1, limit: limit } }"
         rel="next"
         v-if="hasNextPage"
         >Next &#62;
@@ -35,42 +35,61 @@
 // @ is an alias to /src
 import EventCard from '@/components/EventCard.vue';
 import EventService from '@/services/EventService.js';
-import { watchEffect } from 'vue';
+import NProgress from 'nprogress';
 
 export default {
   name: 'Home',
-  props: ['page'],
+  props: ['page', 'limit'],
   components: {
     EventCard
   },
   data() {
     return {
       events: null,
-      totalEvents: 0,
-      perPage: 1
+      totalEvents: 0
     };
   },
-  created() {
-    watchEffect(() => {
-      // this.events = null;
-      EventService.getEvents(this.perPage, this.page)
-        .then(response => {
-          this.events = response.data;
-          this.totalEvents = response.headers['x-total-count'];
-        })
-        .catch(err => {
-          console.log(err);
-          this.$router.push({ name: 'NetworkError' });
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    NProgress.start();
+    EventService.getEvents(
+      parseInt(routeTo.query.limit) || 2,
+      parseInt(routeTo.query.page) || 1
+    )
+      .then(response => {
+        next(comp => {
+          comp.events = response.data;
+          comp.totalEvents = response.headers['x-total-count'];
         });
-    });
+      })
+      .catch(err => {
+        console.log(err);
+        next({ name: 'NetworkError' });
+      })
+      .finally(() => NProgress.done());
+  },
+  beforeRouteUpdate(routeTo) {
+    NProgress.start();
+    EventService.getEvents(
+      parseInt(routeTo.query.limit) || 2,
+      parseInt(routeTo.query.page) || 1
+    )
+      .then(response => {
+        this.events = response.data;
+        this.totalEvents = response.headers['x-total-count'];
+      })
+      .catch(err => {
+        console.log(err);
+        return { name: 'NetworkError' };
+      })
+      .finally(() => NProgress.done());
   },
   computed: {
     hasNextPage() {
-      const totalPages = Math.ceil(this.totalEvents / this.perPage);
+      const totalPages = Math.ceil(this.totalEvents / this.limit);
       return this.page < totalPages;
     },
     totalPages() {
-      return Math.ceil(this.totalEvents / this.perPage);
+      return Math.ceil(this.totalEvents / this.limit);
     }
   }
 };

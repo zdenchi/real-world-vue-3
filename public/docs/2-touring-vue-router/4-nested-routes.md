@@ -1,6 +1,6 @@
 ## 4. Nested Routes
 
-```vue ./src/views/event/Layout.vue
+```html ./src/views/event/Layout.vue
 <template>
   <div v-if="event">
     <h1>{{ event.title }}</h1>

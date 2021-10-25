@@ -1,6 +1,6 @@
 ## 6. Programmatic Navigation
 
-```vue ./src/views/event/Register.vue
+```html ./src/views/event/Register.vue
 <template>
   <p>Register event here</p>
   <button @click="register">Register Me</button>

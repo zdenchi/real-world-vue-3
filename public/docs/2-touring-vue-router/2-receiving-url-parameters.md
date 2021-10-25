@@ -2,7 +2,7 @@
 
 ### Query parameters of the URL: https://rwv-3.onrender.com/events?page=4
 
-```vue ./src/components/Events.vue
+```html ./src/components/Events.vue
 <template>
   <div>
     <h1>You are on page {{ $route.query.page }}</h1>
@@ -34,7 +34,7 @@ const routes = [
 ]
 ```
 
-```vue ./src/components/Events.vue
+```html ./src/components/Events.vue
 <template>
   <div>
     <h1>You are on page {{ $route.params.page }}</h1>
@@ -66,7 +66,7 @@ const routes = [
 ]
 ``` 
 
-```vue ./src/components/Events.vue
+```html ./src/components/Events.vue
 <template>
   <div>
     <h1>You are on page {{ $route.params.page }}</h1>
