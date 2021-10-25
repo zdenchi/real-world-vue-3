@@ -1,47 +1,92 @@
-## 9. In-Component Route Guards
+## 11. Wrapping Up
 
-1. Move API call into an In-Component Route Guard
-2. Install `nprogress`, progress bar library
-3. Start progress bar when routing to the component
-4. Finish the progress bar when API call finishes
-5. Ensure that pagination still works
+### Route Meta Fields
 
-### In-Component Route Hooks
+```js /src/router/index.js
+const routes = [
+  {
+    path: 'edit',
+    name: 'EventEdit',
+    component: EventEdit,
+    meta: { requireAuth: true }
+  }
+]
 
-`beforeRouteEnter(routeTo, routeFrom, next)`
+router.beforeEach((to, from) => {
+  NProgress.start();
 
-`beforeRouteUpdate(routeTo, routeFrom, next)`
+  // Hardcoded unauth user, need to replace to auth library
+  const notAuthorized = true;
 
-`beforeRouteLeave(routeTo, routeFrom, next)`
+  if (to.meta.requireAuth && notAuthorized) {
+    GStore.flashMessage = 'Sorry, you are not authorized to view this page';
 
-#### next
+    setTimeout(() => {
+      GStore.flashMessage = '';
+    }, 3000)
 
-Continue navigation `next() || return `
-
-Cancel the navigation `next(false) || return false`
-
-Redirect to the path `/` `next('/') || return '/'`
-
-Redirect to the named path `next({ name: 'event-list' }) || return { name: 'event-list' }`
-
-#### Confirm the user wants to leave the page
-
-```html
-<script>
-export default {
-  data() {
-    return {
-      unsavedChanges: false
-    }
-  },
-  beforeRouteLeave(routeTo, routeFrom, next) {
-    if (this.unsavedChanges) {
-      const answer = window.confirm('You have unsaved changes! Do you really want to leave?');
-      if (!answer) {
-        return false;
-      }
+    if (from.href) {
+      // If this navigation came from a previous page.
+      return false;
+    } else {
+      // Must be navigating directly.
+      // Push navigation to the root route.
+      return { path: '/' };
     }
   }
-};
-</script>
+});
+```
+
+### Lazy Loading Routes
+
+```js /src/router/index.js
+const routes = [
+  {
+    path: '/about-us',
+    name: 'About',
+    // component: About
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+      import(/* webpackChunkName: "about" */ '../views/About.vue')
+  }
+]
+```
+
+Another way to do such.
+```js /src/router/index.js
+const About = () => import(/* webpackChunkName: "about" */ '../views/About.vue');
+
+const routes = [
+  {
+    path: '/about',
+    name: 'About',
+    component: About
+  }
+]
+```
+
+Create a bundje of JS.
+```js /src/router/index.js
+const Uploader = () => import(/* webpackChunkName: "creator" */ '../views/Uploader.vue');
+const Editor = () => import(/* webpackChunkName: "creator" */ '../views/Editor.vue');
+const Publisher = () => import(/* webpackChunkName: "creator" */ '../views/Publisher.vue');
+```
+
+### Scroll Behavior
+
+Always scroll to top
+```js /src/router/index.js
+const router = createRouter({
+  history: createWebHistory(process.env.BASE_URL),
+  routes,
+  scrollBehavior() {
+    if (savedPosition) {
+      return savedPosition;
+    } else {
+      return { top: 0 };
+    }
+  }
+});
 ```
