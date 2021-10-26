@@ -1,12 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import EventList from '../views/EventList.vue';
-import EventLayout from '../views/event/Layout.vue';
-import EventDetails from '../views/event/Details.vue';
-import EventRegister from '../views/event/Register.vue';
-import EventEdit from '../views/event/Edit.vue';
-// import About from '../views/About.vue';
-import NotFound from '../views/NotFound.vue';
-import NetworkError from '../views/NetworkError.vue';
+import EventList from '@/views/EventList.vue';
+import EventCreate from '@/views/EventCreate.vue';
+import EventLayout from '@/views/event/Layout.vue';
+import EventDetails from '@/views/event/Details.vue';
+import EventRegister from '@/views/event/Register.vue';
+import EventEdit from '@/views/event/Edit.vue';
+// import About from '@/views/About.vue';
+import NotFound from '@/views/NotFound.vue';
+import NetworkError from '@/views/NetworkError.vue';
 import NProgress from 'nprogress';
 import EventService from '@/services/EventService.js';
 import GStore from '@/store';
@@ -66,6 +67,11 @@ const routes = [
         component: EventRegister
       }
     ]
+  },
+  {
+    path: '/event/create',
+    name: 'EventCreate',
+    component: EventCreate
   },
   {
     path: '/event/:afterEvent(.*)',
