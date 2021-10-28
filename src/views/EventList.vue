@@ -3,10 +3,10 @@
   <div class="events">
     <EventCard v-for="event in event.events" :key="event.id" :event="event" />
 
-    <!-- <div class="pagination">
+    <div class="pagination">
       <router-link
         id="page-prev"
-        :to="{ name: 'EventList', query: { page: page - 1, limit: limit } }"
+        :to="{ name: 'EventList', query: { page: page - 1 } }"
         rel="prev"
         v-if="page != 1"
         >&#60; Previous
@@ -16,62 +16,52 @@
         v-for="i in totalPages"
         :key="i"
         :class="{ active: page === i }"
-        :to="{ name: 'EventList', query: { page: i, limit: limit } }"
+        :to="{ name: 'EventList', query: { page: i } }"
         :rel="page"
         >{{ i }}
       </router-link>
 
       <router-link
         id="page-next"
-        :to="{ name: 'EventList', query: { page: page + 1, limit: limit } }"
+        :to="{ name: 'EventList', query: { page: page + 1 } }"
         rel="next"
         v-if="hasNextPage"
         >Next &#62;
-      </router-link> 
-    </div> -->
+      </router-link>
+    </div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
 import EventCard from '@/components/EventCard.vue';
-// import EventService from '@/services/EventService.js';
+import { watchEffect } from 'vue';
 import { mapState, mapActions } from 'vuex';
 
 export default {
-  // props: ['page', 'limit'],
+  props: ['page'],
   components: {
     EventCard
   },
-  // beforeRouteEnter(routeTo) {
-  //   this.fetchEvents(
-  //     parseInt(routeTo.query.limit) || 2,
-  //     parseInt(routeTo.query.page) || 1
-  //   );
-  // },
-  // beforeRouteUpdate(routeTo) {
-  //   this.fetchEvents(
-  //     parseInt(routeTo.query.limit) || 2,
-  //     parseInt(routeTo.query.page) || 1
-  //   );
-  // },
   created() {
-    this.fetchEvents().catch(error => {
-      this.$router.push({
-        name: 'ErrorDisplay',
-        params: { error: error }
+    watchEffect(() => {
+      this.fetchEvents(this.page).catch(error => {
+        this.$router.push({
+          name: 'ErrorDisplay',
+          params: { error: error }
+        });
       });
     });
   },
   computed: {
     ...mapState(['event', 'user']),
-    // hasNextPage() {
-    //   const totalPages = Math.ceil(this.event.totalEvents / this.limit);
-    //   return this.page < totalPages;
-    // },
-    // totalPages() {
-    //   return Math.ceil(this.event.totalEvents / this.limit);
-    // }
+    hasNextPage() {
+      const totalPages = Math.ceil(this.event.totalEvents / this.event.perPage);
+      return this.page < totalPages;
+    },
+    totalPages() {
+      return Math.ceil(this.event.totalEvents / this.event.perPage);
+    }
   },
   methods: {
     ...mapActions('event', ['fetchEvents'])

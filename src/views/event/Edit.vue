@@ -9,7 +9,6 @@ export default {
       unsavedChanges: true
     };
   },
-  props: ['event'],
   beforeRouteLeave() {
     if (this.unsavedChanges) {
       const answer = window.confirm(

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="event">
+  <div v-if="event.currentEvent">
     <h1>{{ event.currentEvent.title }}</h1>
     <div id="nav">
       <router-link :to="{ name: 'EventDetails' }">Details</router-link> |
@@ -14,6 +14,7 @@
 import { mapState, mapActions } from 'vuex';
 
 export default {
+  props: ['id'],
   created() {
     this.fetchEvent(this.id).catch(error => {
       this.$router.push({
