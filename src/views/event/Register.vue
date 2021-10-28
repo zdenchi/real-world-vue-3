@@ -4,20 +4,18 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   props: ['event'],
-  inject: ['GStore'],
   methods: {
+    ...mapActions(['showFlashMessage']),
     register() {
       // Call to API
       // If registered then redirect to event details
-
-      this.GStore.flashMessage = `You are successfully registred for ${this.event.title}`;
-
-      setTimeout(() => {
-        this.GStore.flashMessage = '';
-      }, 3000);
-
+      this.showFlashMessage(
+        `You are successfully registred for ${this.event.title}`
+      );
       this.$router.push({ name: 'EventDetails' });
     }
   }

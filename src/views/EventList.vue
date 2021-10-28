@@ -1,8 +1,9 @@
 <template>
+  <h1>Events for {{ user.userInfo.name }}</h1>
   <div class="events">
-    <EventCard v-for="event in events" :key="event.id" :event="event" />
+    <EventCard v-for="event in event.events" :key="event.id" :event="event" />
 
-    <div class="pagination">
+    <!-- <div class="pagination">
       <router-link
         id="page-prev"
         :to="{ name: 'EventList', query: { page: page - 1, limit: limit } }"
@@ -26,66 +27,54 @@
         rel="next"
         v-if="hasNextPage"
         >Next &#62;
-      </router-link>
-    </div>
+      </router-link> 
+    </div> -->
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
 import EventCard from '@/components/EventCard.vue';
-import EventService from '@/services/EventService.js';
+// import EventService from '@/services/EventService.js';
+import { mapState, mapActions } from 'vuex';
 
 export default {
-  name: 'Home',
-  props: ['page', 'limit'],
+  // props: ['page', 'limit'],
   components: {
     EventCard
   },
-  data() {
-    return {
-      events: null,
-      totalEvents: 0
-    };
-  },
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    EventService.getEvents(
-      parseInt(routeTo.query.limit) || 2,
-      parseInt(routeTo.query.page) || 1
-    )
-      .then(response => {
-        next(comp => {
-          comp.events = response.data;
-          comp.totalEvents = response.headers['x-total-count'];
-        });
-      })
-      .catch(err => {
-        console.log(err);
-        next({ name: 'NetworkError' });
+  // beforeRouteEnter(routeTo) {
+  //   this.fetchEvents(
+  //     parseInt(routeTo.query.limit) || 2,
+  //     parseInt(routeTo.query.page) || 1
+  //   );
+  // },
+  // beforeRouteUpdate(routeTo) {
+  //   this.fetchEvents(
+  //     parseInt(routeTo.query.limit) || 2,
+  //     parseInt(routeTo.query.page) || 1
+  //   );
+  // },
+  created() {
+    this.fetchEvents().catch(error => {
+      this.$router.push({
+        name: 'ErrorDisplay',
+        params: { error: error }
       });
-  },
-  beforeRouteUpdate(routeTo) {
-    return EventService.getEvents(
-      parseInt(routeTo.query.limit) || 2,
-      parseInt(routeTo.query.page) || 1
-    )
-      .then(response => {
-        this.events = response.data;
-        this.totalEvents = response.headers['x-total-count'];
-      })
-      .catch(err => {
-        console.log(err);
-        return { name: 'NetworkError' };
-      });
+    });
   },
   computed: {
-    hasNextPage() {
-      const totalPages = Math.ceil(this.totalEvents / this.limit);
-      return this.page < totalPages;
-    },
-    totalPages() {
-      return Math.ceil(this.totalEvents / this.limit);
-    }
+    ...mapState(['event', 'user']),
+    // hasNextPage() {
+    //   const totalPages = Math.ceil(this.event.totalEvents / this.limit);
+    //   return this.page < totalPages;
+    // },
+    // totalPages() {
+    //   return Math.ceil(this.event.totalEvents / this.limit);
+    // }
+  },
+  methods: {
+    ...mapActions('event', ['fetchEvents'])
   }
 };
 </script>

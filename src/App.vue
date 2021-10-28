@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <div id="flashMessage" v-if="GStore.flashMessage">
-      {{ GStore.flashMessage }}
+    <div id="flashMessage" v-if="flashMessage">
+      {{ flashMessage }}
     </div>
 
     <div id="nav">
@@ -14,8 +14,12 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
-  inject: ['GStore']
+  computed: {
+    ...mapState(['flashMessage'])
+  }
 };
 </script>
 

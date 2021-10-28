@@ -65,6 +65,96 @@
       "time": "11:00",
       "petsAllowed": false,
       "organizer": "Brody Kill"
+    },
+    {
+      "id": "ee6a1cd7-ba52-4e5d-b3dd-39bfd04c420c",
+      "category": "education",
+      "title": "asdasd",
+      "description": "asdasdasd",
+      "location": "asdasd",
+      "date": "asdasd",
+      "time": "asdasdasd",
+      "organizer": "Adam Beyer"
+    },
+    {
+      "id": "103c8050-6e21-4fce-866f-160b3a44f8b5",
+      "category": "",
+      "title": "",
+      "description": "",
+      "location": "",
+      "date": "",
+      "time": "",
+      "organizer": "Adam Beyer"
+    },
+    {
+      "id": "32a90c97-1376-41a1-af1c-805a55fa1b98",
+      "category": "sustainability",
+      "title": "Titleeeeeeeeeeeee",
+      "description": "DescriptionDescriptionDescriptionDescription",
+      "location": "LocationLocationLocationLocation",
+      "date": "DateDate",
+      "time": "TimeTime",
+      "organizer": "Adam Beyer"
+    },
+    {
+      "id": "605af385-4b46-433e-bb80-7176430d6deb",
+      "category": "sustainability",
+      "title": "Titleeeeeeeeeeeee",
+      "description": "DescriptionDescriptionDescriptionDescription",
+      "location": "LocationLocationLocationLocation",
+      "date": "DateDate",
+      "time": "TimeTime",
+      "organizer": "Adam Beyer"
+    },
+    {
+      "id": "5afd0316-0e55-41e5-bddf-385aad5437de",
+      "category": "animal welfare",
+      "title": "sdfsdf",
+      "description": "sdfsdfsd",
+      "location": "fsdf",
+      "date": "fsdfsdf",
+      "time": "sdfsdfq11111",
+      "organizer": "Adam Beyer"
+    },
+    {
+      "id": "be0c17bb-04f2-4795-ac85-c4d195ddfa8e",
+      "category": "animal welfare",
+      "title": "sdfsdf",
+      "description": "sdfsdfsd",
+      "location": "fsdf",
+      "date": "fsdfsdf",
+      "time": "sdfsdfq11111",
+      "organizer": "Adam Beyer"
+    },
+    {
+      "id": "c84a0bda-5cac-45fd-93be-a8fffbd05e1d",
+      "category": "nature",
+      "title": "dfg",
+      "description": "dfg",
+      "location": "dfg",
+      "date": "dfg",
+      "time": "dfg",
+      "organizer": "Adam Jahr"
+    },
+    {
+      "id": "15a81002-e8f9-415b-815f-d432f210f8f9",
+      "category": "nature",
+      "title": "w",
+      "description": "q",
+      "location": "z",
+      "date": "w",
+      "time": "w",
+      "organizer": "Adam Jahr"
+    },
+    {
+      "id": "0fc37731-d217-41e9-9ae2-94f393e5b06c",
+      "category": "sustainability",
+      "title": "sdfsdfsdf",
+      "description": "sdfsdfsdf",
+      "location": "sdfsdfsdf",
+      "date": "sdfsdfsdf",
+      "time": "sdfsdfsdf",
+      "organizer": "Adam Jahr"
     }
   ]
 }
