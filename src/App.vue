@@ -8,9 +8,7 @@
       <router-link :to="{ name: 'EventList' }">Events</router-link> |
       <router-link :to="{ name: 'About' }">About</router-link> |
       <router-link :to="{ name: 'EventCreate' }">Create Event</router-link> |
-      <router-link :to="{ name: 'ComponentsForm' }"
-        >Components Form</router-link
-      >
+      <router-link :to="{ name: 'LoginForm' }">Login Form</router-link>
     </div>
     <router-view />
   </div>
@@ -27,22 +25,28 @@ export default {
 </script>
 
 <style>
-body {
-  font-family: Avenir, Helvetica, Arial, 'Open Sans', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  margin: 0;
+*,
+::after,
+::before {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: Helvetica, Arial, 'Open Sans', sans-serif;
   font-size: 16px;
   line-height: 1.5;
-  text-align: center;
   color: #2c3e50;
 }
 
+body {
+  margin: 0;
+}
+
 #app {
-  box-sizing: border-box;
   width: 500px;
   padding: 0 20px 20px;
   margin: 0 auto;
+  text-align: center;
 }
 hr {
   box-sizing: content-box;
@@ -58,44 +62,44 @@ img {
   border-style: none;
   width: 100%;
 }
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6,
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-  display: flex;
-  align-items: center;
-  font-family: 'Montserrat', sans-serif;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  line-height: 1.2;
 }
-h1 {
-  font-size: 50px;
-  font-weight: 700;
-  justify-content: center;
+.h1 {
+  font-size: calc(1.375rem + 1.5vw);
 }
+.h2,
 h2 {
-  font-size: 38px;
-  font-weight: 700;
+  font-size: calc(1.325rem + 0.9vw);
 }
+.h3,
 h3 {
-  font-size: 28px;
-  font-weight: 700;
+  font-size: calc(1.3rem + 0.6vw);
 }
+.h4,
 h4 {
-  font-size: 21px;
-  font-weight: 700;
+  font-size: calc(1.275rem + 0.3vw);
 }
+.h5,
 h5 {
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 1.25rem;
 }
+.h6,
 h6 {
-  font-size: 15px;
-  font-weight: 700;
-}
-b,
-strong {
-  font-weight: bolder;
+  font-size: 1rem;
 }
 small {
   font-size: 80%;
@@ -212,6 +216,7 @@ textarea {
   -webkit-appearance: none;
 }
 [type='text'],
+[type='email'],
 [type='number'],
 [type='search'],
 [type='password'] {
@@ -221,6 +226,7 @@ textarea {
   font-size: 20px;
 }
 [type='text']:focus,
+[type='email']:focus,
 [type='number']:focus,
 [type='search']:focus,
 [type='password']:focus {

@@ -5,7 +5,7 @@ import EventLayout from '../views/event/Layout.vue';
 import EventDetails from '../views/event/Details.vue';
 import EventRegister from '../views/event/Register.vue';
 import EventEdit from '../views/event/Edit.vue';
-import ComponentsForm from '../views/ComponentsForm.vue';
+import LoginForm from '../views/LoginForm.vue';
 import ErrorDisplay from '@/views/ErrorDisplay.vue';
 import About from '@/views/About.vue';
 import NProgress from 'nprogress';
@@ -51,9 +51,9 @@ const routes = [
     component: About
   },
   {
-    path: '/components-form',
-    name: 'ComponentsForm',
-    component: ComponentsForm
+    path: '/login',
+    name: 'LoginForm',
+    component: LoginForm
   },
   {
     path: '/error/:error',

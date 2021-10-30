@@ -1,53 +1,85 @@
 <template>
-  <h1>Create an event</h1>
+  <div>
+    <h1>Create an event</h1>
 
-  <div class="form-container">
     <form @submit.prevent="onSubmit">
-      <label>Select a category: </label>
-      <select v-model="event.category">
-        <option
-          v-for="option in categories"
-          :value="option"
-          :key="option"
-          :selected="option === event.category"
-          >{{ option }}</option
-        >
-      </select>
-
-      <h3>Name & describe your event</h3>
-
-      <label>Title</label>
-      <input v-model="event.title" type="text" placeholder="Title" />
-
-      <label>Description</label>
-      <input
-        v-model="event.description"
-        type="text"
-        placeholder="Description"
+      <BaseSelect
+        :options="categories"
+        v-model="event.category"
+        label="Select a category"
+        error=""
       />
 
-      <h3>Where is your event?</h3>
+      <fieldset>
+        <legend class="h2">Describe your event</legend>
+        <BaseInput v-model="event.title" label="Title" type="text" error="" />
 
-      <label>Location</label>
-      <input v-model="event.location" type="text" placeholder="Location" />
+        <BaseInput
+          v-model="event.description"
+          label="Description"
+          type="text"
+          error=""
+        />
 
-      <h3>When is your event?</h3>
-      <label>Date</label>
-      <input v-model="event.date" type="text" placeholder="Date" />
+        <BaseInput
+          v-model="event.location"
+          label="Location"
+          type="text"
+          error=""
+        />
+      </fieldset>
 
-      <label>Time</label>
-      <input v-model="event.time" type="text" placeholder="Time" />
+      <fieldset>
+        <legend class="h2">Are pets allowed?</legend>
+        <BaseRadioGroup
+          v-model="event.pets"
+          name="pets"
+          :options="petOptions"
+          vertical
+          error=""
+        />
+      </fieldset>
 
-      <button type="submit">Submit</button>
+      <fieldset>
+        <legend class="h2">Extras</legend>
+        <div>
+          <BaseCheckbox
+            label="Catering"
+            v-model="event.extras.catering"
+            error=""
+          />
+        </div>
+        <div>
+          <BaseCheckbox
+            label="Live music"
+            v-model="event.extras.music"
+            error=""
+          />
+        </div>
+      </fieldset>
+
+      <button class="button -fill-gradient" type="submit">Submit</button>
     </form>
+
+    <pre>{{ event }}</pre>
   </div>
 </template>
 
 <script>
 import { v4 as uuidv4 } from 'uuid';
 import { mapState, mapActions } from 'vuex';
+import BaseInput from '@/components/BaseInput.vue';
+import BaseSelect from '@/components/BaseSelect.vue';
+import BaseCheckbox from '@/components/BaseCheckbox.vue';
+import BaseRadioGroup from '@/components/BaseRadioGroup.vue';
 
 export default {
+  components: {
+    BaseInput,
+    BaseSelect,
+    BaseCheckbox,
+    BaseRadioGroup
+  },
   data() {
     return {
       categories: [
@@ -65,10 +97,17 @@ export default {
         title: '',
         description: '',
         location: '',
-        date: '',
-        time: '',
+        pets: 1,
+        extras: {
+          catering: false,
+          music: false
+        },
         organizer: ''
-      }
+      },
+      petOptions: [
+        { label: 'Yes', value: 1 },
+        { label: 'No', value: 0 }
+      ]
     };
   },
   computed: {
@@ -99,3 +138,11 @@ export default {
   }
 };
 </script>
+
+<style>
+fieldset {
+  border: 0;
+  margin-bottom: 0;
+  padding: 0;
+}
+</style>
