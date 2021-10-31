@@ -4,8 +4,9 @@
       <BaseInput
         label="Email"
         type="text"
-        v-model="email"
         :error="emailError"
+        :modelValue="email"
+        @change="handleChange"
       />
     </div>
     <div class="form-control">
@@ -34,13 +35,7 @@ export default {
   },
   setup() {
     function onSubmit() {
-      if (!email.value || !password.value) {
-        alert('This field is required');
-      } else if (!!emailError.value || !!passwordError.value) {
-        alert(emailError.value || passwordError.value);
-      } else {
-        alert('Submited');
-      }
+      alert('Submited');
     }
 
     const validations = {
@@ -95,16 +90,33 @@ export default {
       }
     };
 
+    // const { setFieldValue } = useForm({
+    //   validationSchema: validations
+    // });
+    // const { value: email, errorMessage: emailError } = useField('email');
+    // const handleChange = event => {
+    //   setFieldValue('email', event.target.value);
+    // };
+
     useForm({
       validationSchema: validations
     });
 
-    const { value: email, errorMessage: emailError } = useField('email');
+    const { value: email, errorMessage: emailError, handleChange } = useField(
+      'email'
+    );
     const { value: password, errorMessage: passwordError } = useField(
       'password'
     );
 
-    return { onSubmit, email, emailError, password, passwordError };
+    return {
+      onSubmit,
+      email,
+      emailError,
+      password,
+      passwordError,
+      handleChange
+    };
   }
 };
 </script>
