@@ -1,15 +1,16 @@
 <template>
-  <label v-if="label">{{ label }}</label>
+  <label v-if="label" :for="uuid">{{ label }}</label>
   <select
-    :value="modelValue"
     class="field"
     :class="{ error }"
     v-bind="{
       ...$attrs,
-      onChange: $event => {
-        $emit('update:modelValue', $event.target.value);
-      }
+      onChange: updateValue
     }"
+    :value="modelValue"
+    :id="uuid"
+    :aria-describedby="error ? `${uuid}-error` : null"
+    :aria-invalid="error ? true : false"
   >
     <option
       v-for="option in options"
@@ -19,12 +20,14 @@
       >{{ option }}</option
     >
   </select>
-  <BaseErrorMessage v-if="error">
+  <BaseErrorMessage v-if="error" :id="`${uuid}-error`">
     {{ error }}
   </BaseErrorMessage>
 </template>
 
 <script>
+import UniqueID from '@/services/UniqueID';
+import SetupFormComponent from '@/services/SetupFormComponent';
 import BaseErrorMessage from '@/components/BaseErrorMessage.vue';
 
 export default {
@@ -37,8 +40,7 @@ export default {
       default: ''
     },
     modelValue: {
-      type: [String, Number],
-      default: ''
+      type: [String, Number]
     },
     options: {
       type: Array,
@@ -48,6 +50,14 @@ export default {
       type: String,
       default: ''
     }
+  },
+  setup(props, context) {
+    const { updateValue } = SetupFormComponent(props, context);
+    const uuid = UniqueID().getID();
+    return {
+      updateValue,
+      uuid
+    };
   }
 };
 </script>

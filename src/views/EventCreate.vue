@@ -2,7 +2,7 @@
   <div>
     <h1>Create an event</h1>
 
-    <form @submit="submit">
+    <form @submit.prevent="submit">
       <BaseSelect
         label="Select a category"
         :options="categories"
@@ -45,13 +45,6 @@
           v-model="pets"
           :error="errors.pets"
         />
-        <BaseRadioGroup
-          v-model="pets"
-          name="pets"
-          :options="petOptions"
-          vertical
-          :error="errors.pets"
-        />
       </fieldset>
 
       <fieldset>
@@ -79,14 +72,15 @@
       </div>
     </form>
 
-    <pre>{{ event }}</pre>
+    <!-- <pre>{{ event }}</pre> -->
   </div>
 </template>
 
 <script>
-import { v4 as uuidv4 } from 'uuid';
-import { mapState, mapActions } from 'vuex';
+// import { v4 as uuidv4 } from 'uuid';
+// import { mapState, mapActions } from 'vuex';
 import { useField, useForm } from 'vee-validate';
+import { object, string, number, boolean } from 'yup';
 import BaseInput from '@/components/BaseInput.vue';
 import BaseSelect from '@/components/BaseSelect.vue';
 import BaseCheckbox from '@/components/BaseCheckbox.vue';
@@ -111,84 +105,60 @@ export default {
         'education',
         'food',
         'community'
-      ],
-      event: {
-        id: '',
-        category: '',
-        title: '',
-        description: '',
-        location: '',
-        pets: 1,
-        extras: {
-          catering: false,
-          music: false
-        },
-        organizer: ''
-      }
+      ]
+      // event: {
+      //   id: '',
+      //   category: '',
+      //   title: '',
+      //   description: '',
+      //   location: '',
+      //   pets: 1,
+      //   extras: {
+      //     catering: false,
+      //     music: false
+      //   },
+      //   organizer: ''
+      // }
     };
   },
-  computed: {
-    ...mapState(['user'])
-  },
-  methods: {
-    ...mapActions('event', ['createEvent']),
-    onSubmit() {
-      const event = {
-        ...this.event,
-        id: uuidv4(),
-        organizer: this.user.userInfo.name
-      };
-      this.createEvent(event)
-        .then(() => {
-          this.$router.push({
-            name: 'EventDetails',
-            params: { id: event.id }
-          });
-        })
-        .catch(error => {
-          this.$router.push({
-            name: 'ErrorDisplay',
-            params: { error: error }
-          });
-        });
-    }
-  },
+  // computed: {
+  //   ...mapState(['user'])
+  // },
+  // methods: {
+  //   ...mapActions('event', ['createEvent']),
+  //   onSubmit() {
+  //     const event = {
+  //       ...this.event,
+  //       id: uuidv4(),
+  //       organizer: this.user.userInfo.name
+  //     };
+  //     this.createEvent(event)
+  //       .then(() => {
+  //         this.$router.push({
+  //           name: 'EventDetails',
+  //           params: { id: event.id }
+  //         });
+  //       })
+  //       .catch(error => {
+  //         this.$router.push({
+  //           name: 'ErrorDisplay',
+  //           params: { error: error }
+  //         });
+  //       });
+  //   }
+  // },
   setup() {
-    const required = value => {
-      const requiredMessage = 'This field is required';
-      if (value === undefined || value === null) return requiredMessage;
-      if (!String(value).length) return requiredMessage;
-      return true;
-
-      // const isEmptyValue = !String(value).trim();
-      // if (isEmptyValue) return requiredMessage;
-      // return true;
-    };
-    const minLength = (number, value) => {
-      if (String(value).length < number) return `Minimum length is ${number}`;
-      return true;
-    };
-    const anything = () => {
-      return true;
-    };
-
-    const validationSchema = {
-      category: required,
-      title: value => {
-        const req = required(value);
-        if (req !== true) return req;
-
-        const min = minLength(3, value);
-        if (min !== true) return req;
-
-        return true;
-      },
-      description: required,
-      location: undefined,
-      pets: anything,
-      catering: anything,
-      music: anything
-    };
+    const validationSchema = object({
+      category: string().required(),
+      title: string()
+        .required('A cool title is required')
+        .min(3),
+      description: string().required(),
+      location: string(),
+      pets: number(),
+      catering: boolean(),
+      music: boolean()
+    });
 
     const { handleSubmit, errors } = useForm({
       validationSchema,

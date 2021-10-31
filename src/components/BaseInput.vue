@@ -1,21 +1,27 @@
 <template>
-  <label :for="inputId" v-if="label">{{ label }}</label>
+  <label :for="uuid" v-if="label">{{ label }}</label>
   <input
-    v-bind="$attrs"
-    :placeholder="label"
-    :class="{ error }"
+    class="field"
+    v-bind="{
+      ...$attrs,
+      onInput: updateValue
+    }"
+    :id="uuid"
     :value="modelValue"
-    @input="$emit('update:modelValue', $event.target.value)"
-    :id="inputId"
+    :placeholder="label"
+    :aria-describedby="error ? `${uuid}-error` : null"
+    :aria-invalid="error ? true : false"
+    :class="{ error }"
   />
-  <BaseErrorMessage v-if="error">
+  <BaseErrorMessage v-if="error" :id="`${uuid}-error`">
     {{ error }}
   </BaseErrorMessage>
 </template>
 
 <script>
+import UniqueID from '@/services/UniqueID';
+import SetupFormComponent from '@/services/SetupFormComponent';
 import BaseErrorMessage from '@/components/BaseErrorMessage.vue';
-import camelCase from 'lodash/camelCase';
 
 export default {
   components: {
@@ -35,10 +41,13 @@ export default {
       default: ''
     }
   },
-  computed: {
-    inputId() {
-      return `${camelCase(this.label)}Input`;
-    }
+  setup(props, context) {
+    const uuid = UniqueID().getID();
+    const { updateValue } = SetupFormComponent(props, context);
+    return {
+      updateValue,
+      uuid
+    };
   }
 };
 </script>
