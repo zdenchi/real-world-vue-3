@@ -138,6 +138,9 @@ small {
   background: linear-gradient(to right, #16c0b0, #84cf6a);
   color: #fff;
 }
+.form-control {
+  margin-bottom: 20px;
+}
 button,
 label,
 input,
@@ -191,7 +194,8 @@ select.error {
   margin-bottom: 0;
 }
 input + p.errorMessage {
-  margin-bottom: 24px;
+  margin-top: 0;
+  margin-bottom: 20px;
 }
 textarea {
   width: 100%;
@@ -267,6 +271,9 @@ select:focus::ms-value {
 }
 select::ms-expand {
   opacity: 0;
+}
+.form-control > .field {
+  margin: 0;
 }
 .field {
   margin-bottom: 24px;

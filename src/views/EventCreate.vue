@@ -2,41 +2,55 @@
   <div>
     <h1>Create an event</h1>
 
-    <form @submit.prevent="onSubmit">
+    <form @submit="submit">
       <BaseSelect
-        :options="categories"
-        v-model="event.category"
         label="Select a category"
-        error=""
+        :options="categories"
+        v-model="category"
+        :error="errors.category"
       />
 
       <fieldset>
         <legend class="h2">Describe your event</legend>
-        <BaseInput v-model="event.title" label="Title" type="text" error="" />
-
         <BaseInput
-          v-model="event.description"
-          label="Description"
+          label="Title"
           type="text"
-          error=""
+          v-model="title"
+          :error="errors.title"
         />
 
         <BaseInput
-          v-model="event.location"
+          label="Description"
+          type="text"
+          v-model="description"
+          :error="errors.description"
+        />
+
+        <BaseInput
           label="Location"
           type="text"
-          error=""
+          v-model="location"
+          :error="errors.location"
         />
       </fieldset>
 
       <fieldset>
         <legend class="h2">Are pets allowed?</legend>
         <BaseRadioGroup
-          v-model="event.pets"
+          name="pets"
+          :options="[
+            { value: 1, label: 'Yes' },
+            { value: 0, label: 'No' }
+          ]"
+          v-model="pets"
+          :error="errors.pets"
+        />
+        <BaseRadioGroup
+          v-model="pets"
           name="pets"
           :options="petOptions"
           vertical
-          error=""
+          :error="errors.pets"
         />
       </fieldset>
 
@@ -45,20 +59,24 @@
         <div>
           <BaseCheckbox
             label="Catering"
-            v-model="event.extras.catering"
-            error=""
+            v-model="catering"
+            :error="errors.catering"
           />
         </div>
         <div>
           <BaseCheckbox
             label="Live music"
-            v-model="event.extras.music"
-            error=""
+            v-model="music"
+            :error="errors.music"
           />
         </div>
       </fieldset>
 
-      <button class="button -fill-gradient" type="submit">Submit</button>
+      <div>
+        <BaseButton type="submit" class="-fill-gradient" something="else">
+          Submit
+        </BaseButton>
+      </div>
     </form>
 
     <pre>{{ event }}</pre>
@@ -68,17 +86,20 @@
 <script>
 import { v4 as uuidv4 } from 'uuid';
 import { mapState, mapActions } from 'vuex';
+import { useField, useForm } from 'vee-validate';
 import BaseInput from '@/components/BaseInput.vue';
 import BaseSelect from '@/components/BaseSelect.vue';
 import BaseCheckbox from '@/components/BaseCheckbox.vue';
 import BaseRadioGroup from '@/components/BaseRadioGroup.vue';
+import BaseButton from '@/components/BaseButton.vue';
 
 export default {
   components: {
     BaseInput,
     BaseSelect,
     BaseCheckbox,
-    BaseRadioGroup
+    BaseRadioGroup,
+    BaseButton
   },
   data() {
     return {
@@ -103,11 +124,7 @@ export default {
           music: false
         },
         organizer: ''
-      },
-      petOptions: [
-        { label: 'Yes', value: 1 },
-        { label: 'No', value: 0 }
-      ]
+      }
     };
   },
   computed: {
@@ -135,6 +152,76 @@ export default {
           });
         });
     }
+  },
+  setup() {
+    const required = value => {
+      const requiredMessage = 'This field is required';
+      if (value === undefined || value === null) return requiredMessage;
+      if (!String(value).length) return requiredMessage;
+      return true;
+
+      // const isEmptyValue = !String(value).trim();
+      // if (isEmptyValue) return requiredMessage;
+      // return true;
+    };
+    const minLength = (number, value) => {
+      if (String(value).length < number) return `Minimum length is ${number}`;
+      return true;
+    };
+    const anything = () => {
+      return true;
+    };
+
+    const validationSchema = {
+      category: required,
+      title: value => {
+        const req = required(value);
+        if (req !== true) return req;
+
+        const min = minLength(3, value);
+        if (min !== true) return req;
+
+        return true;
+      },
+      description: required,
+      location: undefined,
+      pets: anything,
+      catering: anything,
+      music: anything
+    };
+
+    const { handleSubmit, errors } = useForm({
+      validationSchema,
+      initialValues: {
+        pets: 1,
+        catering: false,
+        music: false
+      }
+    });
+
+    const { value: category } = useField('category');
+    const { value: title } = useField('title');
+    const { value: description } = useField('description');
+    const { value: location } = useField('location');
+    const { value: pets } = useField('pets');
+    const { value: catering } = useField('catering');
+    const { value: music } = useField('music');
+
+    const submit = handleSubmit(values => {
+      console.log('submit', values);
+    });
+
+    return {
+      category,
+      title,
+      description,
+      location,
+      pets,
+      catering,
+      music,
+      submit,
+      errors
+    };
   }
 };
 </script>

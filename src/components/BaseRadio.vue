@@ -7,10 +7,18 @@
     v-bind="$attrs"
   />
   <label v-if="label">{{ label }}</label>
+  <BaseErrorMessage v-if="error">
+    {{ error }}
+  </BaseErrorMessage>
 </template>
 
 <script>
+import BaseErrorMessage from '@/components/BaseErrorMessage.vue';
+
 export default {
+  components: {
+    BaseErrorMessage
+  },
   props: {
     label: {
       type: String,
@@ -23,6 +31,10 @@ export default {
     value: {
       type: [String, Number],
       required: true
+    },
+    error: {
+      type: String,
+      default: ''
     }
   }
 };

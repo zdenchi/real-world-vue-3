@@ -3,6 +3,7 @@
   <select
     :value="modelValue"
     class="field"
+    :class="{ error }"
     v-bind="{
       ...$attrs,
       onChange: $event => {
@@ -18,10 +19,18 @@
       >{{ option }}</option
     >
   </select>
+  <BaseErrorMessage v-if="error">
+    {{ error }}
+  </BaseErrorMessage>
 </template>
 
 <script>
+import BaseErrorMessage from '@/components/BaseErrorMessage.vue';
+
 export default {
+  components: {
+    BaseErrorMessage
+  },
   props: {
     label: {
       type: String,

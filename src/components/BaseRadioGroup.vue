@@ -38,10 +38,6 @@ export default {
     vertical: {
       type: Boolean,
       default: false
-    },
-    error: {
-      type: String,
-      default: ''
     }
   }
 };
